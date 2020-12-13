@@ -29,8 +29,10 @@ def load_logged_in_user():
 @bp.route("/register", methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username, password = request.form['username'], request.form['password']
+        username = request.form['username']
+        password = request.form['password']
         db = get_db()
+        error = None
 
         if not username:
             error = "Username is required"
@@ -43,7 +45,7 @@ def register():
             db.execute("INSERT INTO user (username, password) VALUES (?, ?)",
                        (username, generate_password_hash(password), ))
             db.commit()
-        flash(error)
+            flash(error)
         return redirect(url_for('auth.login'))
     return render_template("auth/register.html")
 
